@@ -1,45 +1,25 @@
 <?php
-/**
- * Requires the "PHP Email Form" library
- * The "PHP Email Form" library is available only in the pro version of the template
- * The library should be uploaded to: vendor/php-email-form/php-email-form.php
- * For more info and help: https://bootstrapmade.com/php-email-form/
- */
+// Check if the form is submitted
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  // Retrieve form data
+  $name = $_POST['name'];
+  $subject = $_POST['subject'];
+  $email = $_POST['email'];
+  $mobile = $_POST['mobile'];
+  $message = $_POST['message'];
 
-// Replace contact@example.com with your real receiving email address
-$receiving_email_address = 'knowledgegreat0@gmail.com';
+  // Validate the form data (you can add more validation if needed)
 
-$php_email_form = 'vendor/php-email-form/php-email-form.php';
-if (file_exists($php_email_form)) {
-    require_once($php_email_form);
-} else {
-    die('Unable to load the "PHP Email Form" Library!');
+  // Send email
+  $to = 'jainaman0744@gmail.com';
+  $headers = "From: $email\r\n";
+  $headers .= "Reply-To: $email\r\n";
+  $message = "Name: $name\r\nSubject: $subject\r\nEmail: $email\r\nMobile: $mobile\r\nMessage: $message";
+  
+  if (mail($to, $subject, $message, $headers)) {
+    echo 'Thank you for your message. We will get back to you soon!';
+  } else {
+    echo 'Oops! Something went wrong. Please try again later.';
+  }
 }
-
-$contact = new PHP_Email_Form();
-$contact->ajax = true;
-
-$contact->to = $receiving_email_address;
-$contact->from_name = $_POST['name'] ?? '';
-$contact->from_email = $_POST['email'] ?? '';
-$contact->subject = $_POST['subject'] ?? '';
-
-// Uncomment below code if you want to use SMTP to send emails. You need to enter your correct SMTP credentials
-/*
-$contact->smtp = array(
-  'host' => 'example.com',
-  'username' => 'example',
-  'password' => 'pass',
-  'port' => '587'
-);
-*/
-
-$fields = array('name', 'email', 'message');
-foreach ($fields as $field) {
-    if (isset($_POST[$field])) {
-        $contact->add_message($_POST[$field], ucfirst($field));
-    }
-}
-
-echo $contact->send();
 ?>
